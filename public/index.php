@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
-use Alura\Cursos\Controller\InterfaceControladorRequisicao;
+use Psr\Http\Server\RequestHandlerInterface;
 
 // pega o caminho buscado na url
 $caminho = $_SERVER['PATH_INFO'];
@@ -34,6 +34,8 @@ session_start();
 //     exit(); //tem que parar senão continua executando o arquivo
 // }
 
+//Implementação da psr17 para criar objetos da psr7
+
 //instancia um fabrica que implementa as interfaces da psr17 para mensagens htpp
 $psr17Factory = new Psr17Factory();
 
@@ -52,9 +54,9 @@ $request = $creator->fromGlobals();
 // pega o nome da classe
 $nomeClasseControlador = $rotas[$caminho];
 // com isso posso instanciar
-/** @var InterfaceControladorRequisicao */
+/** @var RequestHandlerInterface */
 $controlador = new $nomeClasseControlador();
-$response = $controlador->processaRequisicao($request);
+$response = $controlador->handle($request);
 
 //uma resposta pode ter varios cabeçalhos e um cabeçalho pode ter vários valores, por isso dos 2 foreachs
 foreach ($response->getHeaders() as $index => $cabecalho) {
