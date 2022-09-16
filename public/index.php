@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Container\ContainerInterface;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -53,9 +54,22 @@ $request = $creator->fromGlobals();
 
 // pega o nome da classe
 $nomeClasseControlador = $rotas[$caminho];
+
+/**
+ * @var ContainerInterface $container
+ */
+$container = require __DIR__ . '/../config/dependencies.php';
+
 // com isso posso instanciar
-/** @var RequestHandlerInterface */
-$controlador = new $nomeClasseControlador();
+/** @var RequestHandlerInterface $controlador*/
+$controlador = $container->get($nomeClasseControlador);
+
+//Para que o front controller saiba o que cada uma das classes de controlador de requisição precisa para ser
+//instanciada nós vamos utilizar um pacote externo/componente de quem já implementou isso: a partir de um nome
+//de uma classe, descobrir tudo o que ela precisa, cria o que ela necessita, coloca no construtor dela e devolve
+//só a classe instanciada. Esse pacote que faz isso é chamado de contêiner de dependência. A PSR para container 
+//de dependência é a PSR 11. 
+
 $response = $controlador->handle($request);
 
 //uma resposta pode ter varios cabeçalhos e um cabeçalho pode ter vários valores, por isso dos 2 foreachs
