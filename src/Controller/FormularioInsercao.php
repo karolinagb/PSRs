@@ -13,11 +13,9 @@ class FormularioInsercao implements RequestHandlerInterface //Interface de contr
     /**
      * @var EntityManagerInterface
      */
-    private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct()
     {
-        $this->entityManager = $entityManager;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
