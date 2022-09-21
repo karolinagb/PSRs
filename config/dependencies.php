@@ -2,12 +2,13 @@
 
 use DI\ContainerBuilder;
 use Alura\Cursos\Infra\EntityManagerCreator;
+use Doctrine\ORM\EntityManagerInterface;
 
 $containerBuilder = new ContainerBuilder();
 
 $containerBuilder->addDefinitions([
     //função para criar o entity manager de acordo com o que tenho no projeto
-    EntityManagerCreator::class => function ()
+    EntityManagerInterface::class => function ()
     {
         return (new EntityManagerCreator())->getEntityManager();
     },
